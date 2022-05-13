@@ -4,10 +4,9 @@ import com.poebossdrops.dto.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -17,9 +16,15 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    @GetMapping("/{bossName}")
-    public ResponseEntity<Item> getAllItemsByBossName(@PathVariable String bossName){
-        return ResponseEntity.ok(itemService.getAllItemsByBossName(bossName));
+    @PutMapping("/{bossName}")
+    public ResponseEntity<Item> addNewItemForBoss(@PathVariable String bossName, @RequestBody Item item) {
+        log.info("Adding new item to available drop pool for " + bossName + " with information" + item.getItemName());
+        return ResponseEntity.ok(itemService.addNewItem(bossName, item.getItemName()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleDatabaseFailures(RuntimeException runtimeException){
+        return ResponseEntity.internalServerError().body(runtimeException.getMessage());
     }
 
 }

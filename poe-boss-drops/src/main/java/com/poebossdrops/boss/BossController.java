@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/boss")
@@ -16,7 +18,7 @@ public class BossController {
     private final BossService bossService;
 
     @GetMapping("/{bossName}")
-    public ResponseEntity<Boss> getAllDropsByBossName(@PathVariable String bossName){
+    public ResponseEntity<List<Item>> getAllDropsByBossName(@PathVariable String bossName){
         return ResponseEntity.ok(bossService.getAllDropsByBossName(bossName));
     }
 
@@ -24,7 +26,6 @@ public class BossController {
     public ResponseEntity<Boss> addNewBoss(@RequestBody Boss boss){
         log.info("Adding new boss " + boss.getBossName());
         return ResponseEntity.ok(bossService.createNewBoss(boss));
-
     }
 
 

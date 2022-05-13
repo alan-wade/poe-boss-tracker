@@ -2,12 +2,14 @@ package com.poebossdrops.boss;
 
 import com.poebossdrops.drops.DropRepository;
 import com.poebossdrops.dto.Boss;
+import com.poebossdrops.dto.Item;
 import com.poebossdrops.league.LeagueRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -18,7 +20,7 @@ public class BossService {
     private final DropRepository dropRepository;
     private final LeagueRepository leagueRepository;
 
-    public Boss getAllDropsByBossName(String bossName) {
+    public List<Item> getAllDropsByBossName (String bossName) {
         return bossRepository.getAllDropsByBossName(bossName);
     }
 
@@ -28,4 +30,6 @@ public class BossService {
         bossRepository.insertNewBoss(boss, leagueId);
         return bossRepository.getBossByName(boss.getBossName(), leagueId);
     }
+
+
 }
