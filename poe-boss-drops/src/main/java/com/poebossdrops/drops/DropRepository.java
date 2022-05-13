@@ -14,6 +14,6 @@ public class DropRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public List<Item> getDropsByBossUUID(UUID bossId) {
-    }
+    //public List<Item> getDropsByBossUUID(UUID bossId) {
+    //}
 }
