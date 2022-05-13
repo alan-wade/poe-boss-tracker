@@ -1,5 +1,6 @@
 package com.poebossdrops.boss;
 
+import com.poebossdrops.drops.DropRepository;
 import com.poebossdrops.dto.Boss;
 import com.poebossdrops.league.LeagueRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BossService {
     private final BossRepository bossRepository;
+    private final DropRepository dropRepository;
     private final LeagueRepository leagueRepository;
 
     public Boss getAllDropsByBossName(String bossName) {

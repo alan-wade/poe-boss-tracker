@@ -22,7 +22,7 @@ public class BossController {
 
     @PutMapping
     public ResponseEntity<Boss> addNewBoss(@RequestBody Boss boss){
-        log.info("Adding new boss " + boss);
+        log.info("Adding new boss " + boss.getBossName());
         return ResponseEntity.ok(bossService.createNewBoss(boss));
 
     }
