@@ -21,16 +21,33 @@ public class ItemRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public List<Item> getAllItemsByBossName(String bossName) {
+
+    public Item getItemByNameByBoss(String itemName, String bossName) {
         Map<String, String> sqlParams = new HashMap<>();
         sqlParams.put("bossName", bossName);
+        sqlParams.put("itemName", itemName);
 
         try{
-            File sqlFile = new ClassPathResource("sql/items/GetAllItemsByBossName.sql").getFile();
+            File sqlFile = new ClassPathResource("sql/boss/GetAllDropsByBossName.sql").getFile();
             String sql = new String(Files.readAllBytes(sqlFile.toPath()));
-            return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(Item.class));
+            return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(Item.class)).get(0);
         } catch (Exception exception){
-            log.error("Error while trying to get " + bossName);
+            log.error("Error while trying to get item" + itemName);
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+
+    public void insertNewItem(String bossName, String itemName) {
+        Map<String, String> sqlParams = new HashMap<>();
+        sqlParams.put("bossName", bossName);
+        sqlParams.put("itemName", itemName);
+
+        try{
+            File sqlFile = new ClassPathResource("sql/items/InsertItem.sql").getFile();
+            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            jdbcTemplate.update(sql, sqlParams);
+        } catch (Exception exception){
+            log.error("Error while trying to create a new item " + itemName);
             throw new RuntimeException(exception.getMessage());
         }
     }
