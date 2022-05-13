@@ -1,6 +1,7 @@
 package com.poebossdrops.boss;
 
 import com.poebossdrops.dto.Boss;
+import com.poebossdrops.dto.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,19 @@ public class BossController {
         return ResponseEntity.ok(bossService.getAllDropsByBossName(bossName));
     }
 
-    @PutMapping("/{bossName}/item")
-    public ResponseEntity<String> addNewDropForBoss(@PathVariable String bossName, @RequestBody String newItemDrop){
-      log.info("Adding a new item for " + bossName + " with information " + newItemDrop);
-      return ResponseEntity.ok("temp response");
+    @PutMapping
+    public ResponseEntity<Boss> addNewBoss(@RequestBody Boss boss){
+        log.info("Adding new boss " + boss);
+        return ResponseEntity.ok(bossService.createNewBoss(boss));
+
     }
+
+
+    @PutMapping("/{bossName}/item")
+    public ResponseEntity<String> addNewDropForBoss(@PathVariable String bossName, @RequestBody Item newItemDrop){
+        log.info("Adding a new item for " + bossName + " with information " + newItemDrop);
+        return ResponseEntity.ok("temp response");
+    }
+
 
 }
