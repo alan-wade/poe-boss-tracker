@@ -35,4 +35,8 @@ public class BossController {
     }
 
 
+    @ExceptionHandler
+    public ResponseEntity<String> handleDatabaseFailures(RuntimeException runtimeException){
+        return ResponseEntity.internalServerError().body(runtimeException.getMessage());
+    }
 }

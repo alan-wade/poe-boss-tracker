@@ -5,6 +5,7 @@ import com.poebossdrops.league.LeagueRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -19,9 +20,10 @@ public class BossService {
         return bossRepository.getAllDropsByBossName(bossName);
     }
 
+    @Transactional
     public Boss createNewBoss(Boss boss) {
         UUID leagueId = leagueRepository.getCurrentLeague().getLeagueId();
         bossRepository.insertNewBoss(boss, leagueId);
-        return bossRepository.getBossByName(boss.getBossName());
+        return bossRepository.getBossByName(boss.getBossName(), leagueId);
     }
 }

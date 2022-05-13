@@ -1,2 +1,2 @@
-INSERT INTO bossdrops.boss ( league_id, bossName )
-VALUES( :leagueId, :bossName )
+INSERT INTO bossdrops.boss ( league_id, boss_name )
+VALUES( :leagueId::UUID, :bossName )
