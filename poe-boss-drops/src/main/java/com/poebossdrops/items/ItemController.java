@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/item")
@@ -18,7 +20,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping("/{bossName}")
-    public ResponseEntity<Item> getAllItemsByBossName(@PathVariable String bossName){
+    public ResponseEntity<List<Item>> getAllItemsByBossName(@PathVariable String bossName){
         return ResponseEntity.ok(itemService.getAllItemsByBossName(bossName));
     }
 
