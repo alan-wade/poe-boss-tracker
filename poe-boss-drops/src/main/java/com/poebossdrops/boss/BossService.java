@@ -21,7 +21,8 @@ public class BossService {
     private final LeagueRepository leagueRepository;
 
     public List<Item> getAllDropsByBossName (String bossName) {
-        return bossRepository.getAllDropsByBossName(bossName);
+        UUID leagueId = leagueRepository.getCurrentLeague().getLeagueId();
+        return bossRepository.getAllDropsByBossName(bossName, leagueId);
     }
 
     @Transactional
@@ -30,6 +31,4 @@ public class BossService {
         bossRepository.insertNewBoss(boss, leagueId);
         return bossRepository.getBossByName(boss.getBossName(), leagueId);
     }
-
-
 }

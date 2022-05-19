@@ -38,8 +38,9 @@ public class BossRepository {
         }
     }
 
-    public List<Item> getAllDropsByBossName(String bossName) {
+    public List<Item> getAllDropsByBossName(String bossName, UUID leagueId) {
         Map<String, String> sqlParams = new HashMap<>();
+        sqlParams.put("leagueId", leagueId.toString());
         sqlParams.put("bossName", bossName);
 
         try{
