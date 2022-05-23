@@ -25,7 +25,7 @@ public class DropRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public LoggedKill getMostRecentKillByUserBossDate(UUID bossId, UUID appUserID, Timestamp killDate) {
+    public LoggedKill getMostRecentKillByUserBossDate(UUID bossId, UUID appUserID) {
         Map<String, String> sqlParams = new HashMap<>();
         sqlParams.put("bossId", bossId.toString());
         sqlParams.put("appUserId", appUserID.toString());

@@ -19,7 +19,7 @@ public class DropService {
     @Transactional
     public LoggedKill logKill(LoggedKill loggedKill) {
         dropRepository.insertNewKill(loggedKill);
-        return dropRepository.getMostRecentKillByUserBossDate(loggedKill.getBossId(), loggedKill.getAppUserId(), loggedKill.getKillDate());
+        return dropRepository.getMostRecentKillByUserBossDate(loggedKill.getBossId(), loggedKill.getAppUserId());
     }
 
     public List<LoggedDrop> logDrop(LoggedDrop loggedDrop) {
