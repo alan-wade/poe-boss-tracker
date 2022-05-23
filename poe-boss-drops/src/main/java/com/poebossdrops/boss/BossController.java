@@ -4,6 +4,7 @@ import com.poebossdrops.dto.Boss;
 import com.poebossdrops.dto.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,17 @@ public class BossController {
     public ResponseEntity<List<Item>> getAllDropsByBossName(@PathVariable String bossName){
         return ResponseEntity.ok(bossService.getAllDropsByBossName(bossName));
     }
+
+    @GetMapping("/list/current")
+    public ResponseEntity<List<Boss>> getAllBossesForCurrentLeague(){
+        return ResponseEntity.ok(bossService.getAllBossesForCurrentLeague());
+    }
+
+//    @GetMapping("/list/all")
+//    public ResponseEntity<List<Boss>> getAllBosses()
+//    {
+//
+//    }
 
     @PutMapping
     public ResponseEntity<Boss> addNewBoss(@RequestBody Boss boss){

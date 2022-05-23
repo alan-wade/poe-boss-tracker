@@ -15,6 +15,6 @@ import java.util.UUID;
 public class Boss {
     private UUID bossId;
     private String bossName;
-    private League league;
+    private UUID leagueId;
     private List<Item> drops;
 }

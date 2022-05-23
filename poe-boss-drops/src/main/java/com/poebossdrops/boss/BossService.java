@@ -31,4 +31,9 @@ public class BossService {
         bossRepository.insertNewBoss(boss, leagueId);
         return bossRepository.getBossByName(boss.getBossName(), leagueId);
     }
+
+    public List<Boss> getAllBossesForCurrentLeague() {
+        UUID leagueId = leagueRepository.getCurrentLeague().getLeagueId();
+        return bossRepository.getAllBossesForCurrentLeague(leagueId);
+    }
 }

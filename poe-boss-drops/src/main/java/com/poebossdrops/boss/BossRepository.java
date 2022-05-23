@@ -51,7 +51,6 @@ public class BossRepository {
             log.error("Error while trying to get " + bossName);
             throw new RuntimeException(exception.getMessage());
         }
-
     }
 
     public void insertNewBoss(Boss boss, UUID leagueId) {
@@ -65,6 +64,20 @@ public class BossRepository {
             jdbcTemplate.update(sql, sqlParams);
         } catch (Exception exception){
             log.error("Error while trying to create a new boss " + boss);
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+
+    public List<Boss> getAllBossesForCurrentLeague(UUID leagueId) {
+        Map<String, String> sqlParams = new HashMap<>();
+        sqlParams.put("leagueId", leagueId.toString());
+
+        try{
+            File sqlFile = new ClassPathResource("sql/boss/GetAllBossesByLeague.sql").getFile();
+            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(Boss.class));
+        } catch (Exception exception){
+            log.error("Error while trying to list all current league bosses");
             throw new RuntimeException(exception.getMessage());
         }
     }
