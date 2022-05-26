@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -19,7 +20,11 @@ public class DropService {
     @Transactional
     public LoggedKill logKill(LoggedKill loggedKill) {
         dropRepository.insertNewKill(loggedKill);
-        return dropRepository.getMostRecentKillByUserBossDate(loggedKill.getBossId(), loggedKill.getAppUserId());
+        return dropRepository.getMostRecentKillByBossUserDate(loggedKill.getBossId(), loggedKill.getAppUserId());
+    }
+
+    public List<LoggedKill> getAllKillsByBossUser(String bossId, String appUserId) {
+       return dropRepository.getAllKillsByBossUser(UUID.fromString(bossId), UUID.fromString(appUserId));
     }
 
     public List<LoggedDrop> logDrop(LoggedDrop loggedDrop) {

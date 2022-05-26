@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -21,6 +22,11 @@ public class DropController {
     public ResponseEntity<LoggedKill> logKill(@RequestBody LoggedKill loggedKill) {
         log.info("Logging record of new kill for bossId " + loggedKill.getBossId().toString());
         return ResponseEntity.ok(dropService.logKill(loggedKill));
+    }
+
+    @GetMapping("kill/list/{bossId}")
+    public ResponseEntity<List<LoggedKill>> getAllKillsByUserBoss(@PathVariable String bossId, @RequestHeader String appUserId) {
+        return ResponseEntity.ok(dropService.getAllKillsByBossUser(bossId, appUserId));
     }
 
     @PostMapping("/kill/log/drop")

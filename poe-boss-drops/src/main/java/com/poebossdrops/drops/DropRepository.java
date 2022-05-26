@@ -1,6 +1,5 @@
 package com.poebossdrops.drops;
 
-import com.poebossdrops.dto.Item;
 import com.poebossdrops.dto.LoggedDrop;
 import com.poebossdrops.dto.LoggedKill;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,17 +23,32 @@ public class DropRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public LoggedKill getMostRecentKillByUserBossDate(UUID bossId, UUID appUserID) {
+    public LoggedKill getMostRecentKillByBossUserDate(UUID bossId, UUID appUserId) {
         Map<String, String> sqlParams = new HashMap<>();
         sqlParams.put("bossId", bossId.toString());
-        sqlParams.put("appUserId", appUserID.toString());
+        sqlParams.put("appUserId", appUserId.toString());
 
         try{
-            File sqlFile = new ClassPathResource("sql/drops/GetMostRecentKillByUserBoss.sql").getFile();
+            File sqlFile = new ClassPathResource("sql/drops/GetMostRecentKillByBossUser.sql").getFile();
             String sql = new String(Files.readAllBytes(sqlFile.toPath()));
             return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(LoggedKill.class)).get(0);
         } catch (Exception exception) {
             log.error("Error while trying to retrieve logged kill");
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+
+    public List<LoggedKill> getAllKillsByBossUser(UUID bossId, UUID appUserId) {
+        Map<String, String> sqlParams = new HashMap<>();
+        sqlParams.put("bossId", bossId.toString());
+        sqlParams.put("appUserId", appUserId.toString());
+
+        try{
+            File sqlFile = new ClassPathResource("sql/drops/GetAllKillsByBossUser.sql").getFile();
+            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(LoggedKill.class));
+        } catch (Exception exception) {
+            log.error("Error while trying to retrieve logged kills of boss " + bossId + " for user " + appUserId);
             throw new RuntimeException(exception.getMessage());
         }
     }
