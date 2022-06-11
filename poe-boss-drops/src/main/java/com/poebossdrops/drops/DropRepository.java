@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +34,8 @@ public class DropRepository {
         sqlParams.put("appUserId", appUserId.toString());
 
         try{
-            File sqlFile = new ClassPathResource("sql/drops/GetMostRecentKillByBossUser.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/drops/GetMostRecentKillByBossUser.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(LoggedKill.class)).get(0);
         } catch (Exception exception) {
             log.error("Error while trying to retrieve logged kill");
@@ -48,8 +49,8 @@ public class DropRepository {
         sqlParams.put("appUserId", appUserId.toString());
 
         try{
-            File sqlFile = new ClassPathResource("sql/drops/GetAllKillsByBossUser.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/drops/GetAllKillsByBossUser.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(LoggedKill.class));
         } catch (Exception exception) {
             log.error("Error while trying to retrieve logged kills of boss " + bossId + " for user " + appUserId);
@@ -63,8 +64,8 @@ public class DropRepository {
         sqlParams.put("appUserId", loggedKill.getAppUserId().toString());
 
         try{
-            File sqlFile = new ClassPathResource("sql/drops/InsertKill.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/drops/InsertKill.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             jdbcTemplate.update(sql, sqlParams);
         } catch (Exception exception) {
             log.error("Error while trying to log new kill");
@@ -79,8 +80,8 @@ public class DropRepository {
         sqlParams.put("itemValue", loggedDrop.getItemValue().toString());
 
         try{
-            File sqlFile = new ClassPathResource("sql/drops/InsertDrop.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/drops/InsertDrop.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             jdbcTemplate.update(sql, sqlParams);
         } catch (Exception exception) {
             log.error("Error while trying to log new drop");
@@ -94,8 +95,8 @@ public class DropRepository {
         sqlParams.put("appUserId", appUserId.toString());
 
         try{
-            File sqlFile = new ClassPathResource("sql/drops/InsertKill.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/drops/InsertKill.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(sql, new MapSqlParameterSource(sqlParams), generatedKeyHolder);
             return UUID.fromString(generatedKeyHolder.getKeys().get("logged_kill_id").toString());
@@ -112,8 +113,8 @@ public class DropRepository {
 
         for( int i = 0; i < killDrop.getCount(); i++) {
             try {
-                File sqlFile = new ClassPathResource("sql/drops/InsertDrop.sql").getFile();
-                String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+                InputStream sqlInputStream = new ClassPathResource("sql/drops/InsertDrop.sql").getInputStream();
+                String sql = new String(sqlInputStream.readAllBytes());
                 jdbcTemplate.update(sql, sqlParams);
             } catch (Exception exception) {
                 log.error("Error while trying to log new drop");
@@ -127,8 +128,8 @@ public class DropRepository {
         sqlParams.put("loggedKillId", loggedKillId.toString());
 
         try{
-            File sqlFile = new ClassPathResource("sql/drops/GetAllDropsByKill.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/drops/GetAllDropsByKill.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(LoggedDrop.class));
         } catch (Exception exception){
             log.error("Error while trying to get drops for killId" + loggedKillId);

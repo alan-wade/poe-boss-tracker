@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +33,8 @@ public class BossRepository {
         sqlParams.put("bossId", bossId);
 
         try {
-            File sqlFile = new ClassPathResource("sql/boss/GetBossById.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/boss/GetBossById.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             return jdbcTemplate.queryForObject(sql, sqlParams, new BeanPropertyRowMapper<>(Boss.class));
         } catch (EmptyResultDataAccessException emptyEx) {
             log.warn("Unable to find boss with id " + bossId);
@@ -49,8 +50,8 @@ public class BossRepository {
         sqlParams.put("bossId", bossId);
 
         try {
-            File sqlFile = new ClassPathResource("sql/boss/GetAllDropsByBossId.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/boss/GetAllDropsByBossId.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(Item.class));
         } catch (Exception exception) {
             log.error("Error while trying to get " + bossId);
@@ -64,8 +65,8 @@ public class BossRepository {
         sqlParams.put("bossName", boss.getBossName());
 
         try {
-            File sqlFile = new ClassPathResource("sql/boss/InsertBoss.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/boss/InsertBoss.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(sql, new MapSqlParameterSource(sqlParams), generatedKeyHolder);
             return UUID.fromString(generatedKeyHolder.getKeys().get("boss_id").toString());
