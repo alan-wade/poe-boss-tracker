@@ -18,7 +18,6 @@ public class LeagueRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-
     public League getCurrentLeague() {
         try {
             File sqlFile = new ClassPathResource("sql/league/GetCurrentLeague.sql").getFile();

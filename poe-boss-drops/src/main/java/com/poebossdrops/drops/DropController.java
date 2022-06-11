@@ -1,7 +1,9 @@
 package com.poebossdrops.drops;
 
+import com.poebossdrops.dto.KillLog;
 import com.poebossdrops.dto.LoggedDrop;
 import com.poebossdrops.dto.LoggedKill;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class DropController {
         return ResponseEntity.ok(dropService.logKill(loggedKill));
     }
 
-    @GetMapping("kill/list/{bossId}")
+    @GetMapping("/kill/list/{bossId}")
     public ResponseEntity<List<LoggedKill>> getAllKillsByUserBoss(@PathVariable String bossId, @RequestHeader String appUserId) {
         return ResponseEntity.ok(dropService.getAllKillsByBossUser(bossId, appUserId));
     }
@@ -35,8 +37,9 @@ public class DropController {
         return ResponseEntity.ok((dropService.logDrop(loggedDrop)));
     }
 
-    @GetMapping("/{bossName}")
-    public String helloWorld(@PathVariable String bossName){
-        return "Hello World " + bossName;
+    @PutMapping("/kills")
+    @Tag(name = "log", description = "Logs a kill for a user including all the drops for the boss was slain")
+    public ResponseEntity<KillLog> logKillDetails(@RequestHeader UUID appUserId, @RequestBody KillLog killLog) {
+        return ResponseEntity.ok(dropService.logKill(appUserId, killLog));
     }
 }

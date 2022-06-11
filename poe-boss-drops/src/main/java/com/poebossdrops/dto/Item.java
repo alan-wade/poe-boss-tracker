@@ -12,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Item {
-
     private UUID itemId;
     private UUID bossId;
     private String itemName;

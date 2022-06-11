@@ -1,12 +1,16 @@
 package com.poebossdrops.drops;
 
+import com.poebossdrops.dto.KillDrop;
+import com.poebossdrops.dto.KillLog;
 import com.poebossdrops.dto.LoggedDrop;
 import com.poebossdrops.dto.LoggedKill;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -84,12 +88,46 @@ public class DropRepository {
         }
     }
 
+    public UUID insertNewKill(UUID appUserId, KillLog killLog) {
+        Map<String, String> sqlParams = new HashMap<>();
+        sqlParams.put("bossId", killLog.getBossId().toString());
+        sqlParams.put("appUserId", appUserId.toString());
+
+        try{
+            File sqlFile = new ClassPathResource("sql/drops/InsertKill.sql").getFile();
+            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(sql, new MapSqlParameterSource(sqlParams), generatedKeyHolder);
+            return UUID.fromString(generatedKeyHolder.getKeys().get("logged_kill_id").toString());
+        } catch (Exception exception) {
+            log.error("Error while trying to log new kill");
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+    public void insertNewDrop(KillDrop killDrop, UUID killLogId) {
+        Map<String, String> sqlParams = new HashMap<>();
+        sqlParams.put("itemId", killDrop.getItemId().toString());
+        sqlParams.put("loggedKillId", killLogId.toString());
+        sqlParams.put("itemValue", killDrop.getItemValue().toString());
+
+        for( int i = 0; i < killDrop.getCount(); i++) {
+            try {
+                File sqlFile = new ClassPathResource("sql/drops/InsertDrop.sql").getFile();
+                String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+                jdbcTemplate.update(sql, sqlParams);
+            } catch (Exception exception) {
+                log.error("Error while trying to log new drop");
+                throw new RuntimeException(exception.getMessage());
+            }
+        }
+    }
+
     public List<LoggedDrop> getAllDropsForKill(UUID loggedKillId) {
         Map<String, String> sqlParams = new HashMap<>();
         sqlParams.put("loggedKillId", loggedKillId.toString());
 
         try{
-            File sqlFile = new ClassPathResource("sql/drops/GetAllDropsByKill").getFile();
+            File sqlFile = new ClassPathResource("sql/drops/GetAllDropsByKill.sql").getFile();
             String sql = new String(Files.readAllBytes(sqlFile.toPath()));
             return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(LoggedDrop.class));
         } catch (Exception exception){
@@ -97,7 +135,4 @@ public class DropRepository {
             throw new RuntimeException(exception.getMessage());
         }
     }
-
-    //public List<Item> getDropsByBossUUID(UUID bossId) {
-    //}
 }

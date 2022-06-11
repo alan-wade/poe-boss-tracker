@@ -1,5 +1,7 @@
 package com.poebossdrops.drops;
 
+import com.poebossdrops.dto.KillDrop;
+import com.poebossdrops.dto.KillLog;
 import com.poebossdrops.dto.LoggedDrop;
 import com.poebossdrops.dto.LoggedKill;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +19,28 @@ public class DropService {
 
     private final DropRepository dropRepository;
 
+    public List<LoggedKill> getAllKillsByBossUser(String bossId, String appUserId) {
+        return dropRepository.getAllKillsByBossUser(UUID.fromString(bossId), UUID.fromString(appUserId));
+    }
+
     @Transactional
     public LoggedKill logKill(LoggedKill loggedKill) {
         dropRepository.insertNewKill(loggedKill);
         return dropRepository.getMostRecentKillByBossUserDate(loggedKill.getBossId(), loggedKill.getAppUserId());
     }
 
-    public List<LoggedKill> getAllKillsByBossUser(String bossId, String appUserId) {
-       return dropRepository.getAllKillsByBossUser(UUID.fromString(bossId), UUID.fromString(appUserId));
-    }
-
     public List<LoggedDrop> logDrop(LoggedDrop loggedDrop) {
         dropRepository.insertNewDrop(loggedDrop);
         return dropRepository.getAllDropsForKill(loggedDrop.getLoggedKillId());
+    }
+
+    @Transactional
+    public KillLog logKill(UUID appUserId, KillLog killLog) {
+        UUID loggedKillId = dropRepository.insertNewKill(appUserId, killLog);
+        for (KillDrop drop: killLog.getDrops()) {
+            dropRepository.insertNewDrop(drop, loggedKillId);
+        }
+
+        return killLog;
     }
 }

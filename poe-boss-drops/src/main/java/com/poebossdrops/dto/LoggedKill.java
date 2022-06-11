@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
