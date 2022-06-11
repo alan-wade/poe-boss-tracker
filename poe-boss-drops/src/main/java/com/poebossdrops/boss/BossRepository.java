@@ -68,7 +68,7 @@ public class BossRepository {
         }
     }
 
-    public List<Boss> getAllBossesForCurrentLeague(UUID leagueId) {
+    public List<Boss> getAllBossesByLeagueId(UUID leagueId) {
         Map<String, String> sqlParams = new HashMap<>();
         sqlParams.put("leagueId", leagueId.toString());
 
