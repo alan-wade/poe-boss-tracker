@@ -2,6 +2,7 @@ package com.poebossdrops.boss;
 
 import com.poebossdrops.dto.Boss;
 import com.poebossdrops.dto.Item;
+import com.poebossdrops.exception.BadBossRequestException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +21,10 @@ import java.util.UUID;
 public class BossController {
     private final BossService bossService;
 
-    @GetMapping("/{bossName}")
-    @Tag(name = "boss", description = "Get bosses for a league, providing no league name will use the current date to find the active league bosses")
-    public ResponseEntity<List<Item>> getAllDropsByBossName(@PathVariable String bossName){
-        return ResponseEntity.ok(bossService.getAllDropsByBossName(bossName));
+    @GetMapping("/{bossId}")
+    @Tag(name = "boss", description ="Get all drops for a boss with a given id")
+    public ResponseEntity<List<Item>> getAllDropsByBossId(@PathVariable UUID bossId){
+        return ResponseEntity.ok(bossService.getAllDropsByBossId(bossId));
     }
 
     @GetMapping("/league")
@@ -43,15 +44,19 @@ public class BossController {
         return ResponseEntity.ok(bossService.createNewBoss(boss));
     }
 
-    @PutMapping("/{bossName}/item")
+    @PutMapping("/{bossId}/item")
     @Tag(name = "boss", description = "Adds a new item to the drop pool for a boss given")
-    public ResponseEntity<String> addNewDropForBoss(@PathVariable UUID bossId, @RequestBody Item newItemDrop) {
-        log.info("Adding a new drop for boss");
-        return ResponseEntity.ok("temp response");
+    public ResponseEntity<List<Item>> addNewDropForBoss(@PathVariable UUID bossId, @RequestBody Item newItemDrop) {
+        return ResponseEntity.ok(bossService.addNewDropForBoss(bossId, newItemDrop));
     }
 
     @ExceptionHandler
     public ResponseEntity<String> handleDatabaseFailures(RuntimeException runtimeException) {
         return ResponseEntity.internalServerError().body(runtimeException.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleBadRequest(BadBossRequestException badBossRequestException){
+        return ResponseEntity.badRequest().body(badBossRequestException.getMessage());
     }
 }

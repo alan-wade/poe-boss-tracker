@@ -4,5 +4,4 @@ SELECT item.item_id itemId,
 FROM bossdrops.item
      LEFT JOIN bossdrops.boss
      ON item.boss_id = boss.boss_id
-WHERE boss.boss_name = :bossName
-AND   boss.league_id = :leagueId::UUID
+WHERE boss.boss_id = :bossId
