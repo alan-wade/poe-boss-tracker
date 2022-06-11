@@ -21,24 +21,10 @@ public class DropController {
 
     private final DropService dropService;
 
-    @PostMapping("/kill/log")
-    @Tag(name = "log", description = "Logs a kill for a user for the boss was slain")
-    public ResponseEntity<LoggedKill> logKill(@RequestBody LoggedKill loggedKill) {
-        log.info("Logging record of new kill for bossId " + loggedKill.getBossId().toString());
-        return ResponseEntity.ok(dropService.logKill(loggedKill));
-    }
-
     @GetMapping("/kill/list/{bossId}")
     @Tag(name = "log", description = "Gets all the kills and associated drops for a given user and boss")
     public ResponseEntity<List<LoggedKill>> getAllKillsByUserBoss(@PathVariable String bossId, @RequestHeader String appUserId) {
         return ResponseEntity.ok(dropService.getAllKillsByBossUser(bossId, appUserId));
-    }
-
-    @PostMapping("/kill/log/drop")
-    @Tag(name = "log", description = "Logs a drop for an existing logged kill")
-    public ResponseEntity<List<LoggedDrop>> logDrop(@RequestBody LoggedDrop loggedDrop) {
-        log.info("Logging record of new kill for loggedKillId " + loggedDrop.getLoggedKillId().toString());
-        return ResponseEntity.ok((dropService.logDrop(loggedDrop)));
     }
 
     @PutMapping("/kills")
