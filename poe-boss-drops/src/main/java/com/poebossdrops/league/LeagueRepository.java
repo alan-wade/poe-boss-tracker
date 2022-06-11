@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +24,8 @@ public class LeagueRepository {
 
     public League getCurrentLeague() {
         try {
-            File sqlFile = new ClassPathResource("sql/league/GetCurrentLeague.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/league/GetCurrentLeague.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(League.class)).get(0);
         } catch (Exception exception) {
             log.error("Things broke getting the current league");
@@ -37,8 +38,8 @@ public class LeagueRepository {
         sqlParams.put("leagueName", leagueName);
 
         try {
-            File sqlFile = new ClassPathResource("sql/league/GetLeagueByLeagueName.sql").getFile();
-            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
+            InputStream sqlInputStream = new ClassPathResource("sql/league/GetLeagueByLeagueName.sql").getInputStream();
+            String sql = new String(sqlInputStream.readAllBytes());
             return jdbcTemplate.queryForObject(sql, sqlParams, new BeanPropertyRowMapper<>(League.class));
         } catch (EmptyResultDataAccessException emptyResultException) {
             log.warn("Unable to find requested league " + leagueName);
