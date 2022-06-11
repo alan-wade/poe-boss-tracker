@@ -81,8 +81,8 @@ public class BossRepository {
         sqlParams.put("leagueId", leagueId.toString());
 
         try {
-            InputStream sqlInputStream = new ClassPathResource("sql/boss/GetAllBossesByLeague.sql").getInputStream();
-            String sql = new String(sqlInputStream.readAllBytes());
+            File sqlFile = new ClassPathResource("sql/boss/GetAllBossesByLeague.sql").getFile();
+            String sql = new String(Files.readAllBytes(sqlFile.toPath()));
             return jdbcTemplate.query(sql, sqlParams, new BeanPropertyRowMapper<>(Boss.class));
         } catch (Exception exception) {
             log.error("Error while trying to list all current league bosses");
